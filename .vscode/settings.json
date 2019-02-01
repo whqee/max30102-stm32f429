@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "Kconfig": "python",
+        "SConscript": "python",
+        "SConstruct": "python",
+        "main.h": "c",
+        "stm32f4xx_hal.h": "c",
+        "stdint.h": "c"
+    }
+}

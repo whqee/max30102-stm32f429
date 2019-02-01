@@ -1,0 +1,36 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "build/max30102-f429.elf",
+            "name": "Debug Microcontroller ST",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "stutil",
+            "armToolchainPath": "C:/Users/ASUS/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "svdFile": "C:/Users/ASUS/.platformio/platforms/ststm32/misc/svd/STM32F429x.svd",
+            "BMPGDBSerialPort": "COM8",
+            "preLaunchCommands": ["make"],
+            "runToMain": true
+        },
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "build/max30102-f429.elf",
+            "name": "Debug Microcontroller",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "configFiles": [
+                "board/stm32f429disc1.cfg"
+            ],
+            "device": "STM32F429DISCI",
+            "BMPGDBSerialPort": "COM14",
+            "runToMain": true
+        }
+    ]
+}
