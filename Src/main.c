@@ -77,7 +77,7 @@ PUTCHAR_PROTOTYPE
 {
     HAL_UART_Transmit(&huart1 , (uint8_t *)&ch, 1 , 0xffff);
 
-//    while ((USART1->SR & 0X40) == 0); //寄存器操作，循环发�??,直到发�?�完�?
+//    while ((USART1->SR & 0X40) == 0); //寄存器操作,循环发�??,直到发�?�完�??
 //    USART1->DR = (uint8_t) ch;
     return ch;
 }
@@ -90,6 +90,7 @@ static void MX_USART1_UART_Init(void);
 static void MX_I2C3_Init(void);
 /* USER CODE BEGIN PFP */
 int _write(int fd, char *ptr, int len);
+void print_float(float value);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -164,10 +165,13 @@ int main(void)
     /* USER CODE BEGIN 3 */
     HAL_Delay(10);
     temp_value = maxim_max30102_read_temperature();
+    HAL_UART_Transmit(&huart1, "s\r\n", 4, 10);
+    HAL_UART_Transmit(&huart1, &temp_value, sizeof(temp_value), 10);
+    HAL_UART_Transmit(&huart1, "e\r\n", 4, 10);
     // temp_value = 20.0112343434;
-    printf("Temperature = %6.4f \r\n", temp_value);
+    printf("Temperature =  \n");
+    print_float(temp_value);
     printf("---------\r\n");
-    printf("----%4f---%d--\r\n", temp_value, temp_value);
 
   }
   /* USER CODE END 3 */
@@ -485,6 +489,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : MAX30102_INT_Pin */
+  GPIO_InitStruct.Pin = MAX30102_INT_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(MAX30102_INT_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pins : R7_Pin DOTCLK_Pin B3_Pin */
   GPIO_InitStruct.Pin = R7_Pin|DOTCLK_Pin|B3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -535,7 +545,22 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void print_float(float value)
+{
 
+  int tmp,tmp1,tmp2,tmp3;
+
+  tmp = (int)value;
+
+  tmp1=(int)((value-tmp)*10)%10;
+
+  tmp2=(int)((value-tmp)*100)%10;
+
+  tmp3=(int)((value-tmp)*1000)%10;
+
+  printf("%d.%d%d%d\n", tmp,tmp1,tmp2,tmp3);
+
+}
 /* USER CODE END 4 */
 
 /**

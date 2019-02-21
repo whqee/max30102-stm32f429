@@ -196,6 +196,8 @@ void Error_Handler(void);
 #define D0_GPIO_Port GPIOD
 #define D1_Pin GPIO_PIN_15
 #define D1_GPIO_Port GPIOD
+#define MAX30102_INT_Pin GPIO_PIN_2
+#define MAX30102_INT_GPIO_Port GPIOG
 #define BA0_Pin GPIO_PIN_4
 #define BA0_GPIO_Port GPIOG
 #define BA1_Pin GPIO_PIN_5

@@ -1,0 +1,804 @@
+ARM GAS  /tmp/ccsWboKo.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"MAX30102.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.maxim_max30102_write_reg,"ax",%progbits
+  18              		.align	1
+  19              		.global	maxim_max30102_write_reg
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv4-sp-d16
+  25              	maxim_max30102_write_reg:
+  26              	.LFB126:
+  27              		.file 1 "Src/MAX30102.c"
+   1:Src/MAX30102.c **** /** \file max30102.cpp ******************************************************
+   2:Src/MAX30102.c **** *
+   3:Src/MAX30102.c **** * Project: MAXREFDES117#
+   4:Src/MAX30102.c **** * Filename: max30102.cpp
+   5:Src/MAX30102.c **** * Description: This module is an embedded controller driver for the MAX30102
+   6:Src/MAX30102.c **** *
+   7:Src/MAX30102.c **** *
+   8:Src/MAX30102.c **** * --------------------------------------------------------------------
+   9:Src/MAX30102.c **** *
+  10:Src/MAX30102.c **** * This code follows the following naming conventions:
+  11:Src/MAX30102.c **** *
+  12:Src/MAX30102.c **** * char              ch_pmod_value
+  13:Src/MAX30102.c **** * char (array)      s_pmod_s_string[16]
+  14:Src/MAX30102.c **** * float             f_pmod_value
+  15:Src/MAX30102.c **** * int32_t           n_pmod_value
+  16:Src/MAX30102.c **** * int32_t (array)   an_pmod_value[16]
+  17:Src/MAX30102.c **** * int16_t           w_pmod_value
+  18:Src/MAX30102.c **** * int16_t (array)   aw_pmod_value[16]
+  19:Src/MAX30102.c **** * uint16_t          uw_pmod_value
+  20:Src/MAX30102.c **** * uint16_t (array)  auw_pmod_value[16]
+  21:Src/MAX30102.c **** * uint8_t           uch_pmod_value
+  22:Src/MAX30102.c **** * uint8_t (array)   auch_pmod_buffer[16]
+  23:Src/MAX30102.c **** * uint32_t          un_pmod_value
+  24:Src/MAX30102.c **** * int32_t *         pn_pmod_value
+  25:Src/MAX30102.c **** *
+  26:Src/MAX30102.c **** * ------------------------------------------------------------------------- */
+  27:Src/MAX30102.c **** /*******************************************************************************
+  28:Src/MAX30102.c **** * Copyright (C) 2016 Maxim Integrated Products, Inc., All Rights Reserved.
+  29:Src/MAX30102.c **** *
+  30:Src/MAX30102.c **** * Permission is hereby granted, free of charge, to any person obtaining a
+  31:Src/MAX30102.c **** * copy of this software and associated documentation files (the "Software"),
+ARM GAS  /tmp/ccsWboKo.s 			page 2
+
+
+  32:Src/MAX30102.c **** * to deal in the Software without restriction, including without limitation
+  33:Src/MAX30102.c **** * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  34:Src/MAX30102.c **** * and/or sell copies of the Software, and to permit persons to whom the
+  35:Src/MAX30102.c **** * Software is furnished to do so, subject to the following conditions:
+  36:Src/MAX30102.c **** *
+  37:Src/MAX30102.c **** * The above copyright notice and this permission notice shall be included
+  38:Src/MAX30102.c **** * in all copies or substantial portions of the Software.
+  39:Src/MAX30102.c **** *
+  40:Src/MAX30102.c **** * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+  41:Src/MAX30102.c **** * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  42:Src/MAX30102.c **** * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  43:Src/MAX30102.c **** * IN NO EVENT SHALL MAXIM INTEGRATED BE LIABLE FOR ANY CLAIM, DAMAGES
+  44:Src/MAX30102.c **** * OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+  45:Src/MAX30102.c **** * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+  46:Src/MAX30102.c **** * OTHER DEALINGS IN THE SOFTWARE.
+  47:Src/MAX30102.c **** *
+  48:Src/MAX30102.c **** * Except as contained in this notice, the name of Maxim Integrated
+  49:Src/MAX30102.c **** * Products, Inc. shall not be used except as stated in the Maxim Integrated
+  50:Src/MAX30102.c **** * Products, Inc. Branding Policy.
+  51:Src/MAX30102.c **** *
+  52:Src/MAX30102.c **** * The mere transfer of this software does not imply any licenses
+  53:Src/MAX30102.c **** * of trade secrets, proprietary technology, copyrights, patents,
+  54:Src/MAX30102.c **** * trademarks, maskwork rights, or any other form of intellectual
+  55:Src/MAX30102.c **** * property whatsoever. Maxim Integrated Products, Inc. retains all
+  56:Src/MAX30102.c **** * ownership rights.
+  57:Src/MAX30102.c **** *******************************************************************************
+  58:Src/MAX30102.c **** */
+  59:Src/MAX30102.c **** 
+  60:Src/MAX30102.c **** #include "MAX30102.h"
+  61:Src/MAX30102.c **** #include "main.h"
+  62:Src/MAX30102.c **** 
+  63:Src/MAX30102.c **** extern I2C_HandleTypeDef hi2c3;
+  64:Src/MAX30102.c **** 
+  65:Src/MAX30102.c **** extern UART_HandleTypeDef huart1;
+  66:Src/MAX30102.c **** 
+  67:Src/MAX30102.c **** bool maxim_max30102_write_reg(uint8_t uch_addr, uint8_t uch_data)
+  68:Src/MAX30102.c **** /**
+  69:Src/MAX30102.c **** * \brief        Write a value to a MAX30102 register
+  70:Src/MAX30102.c **** * \par          Details
+  71:Src/MAX30102.c **** *               This function writes a value to a MAX30102 register
+  72:Src/MAX30102.c **** *
+  73:Src/MAX30102.c **** * \param[in]    uch_addr    - register address
+  74:Src/MAX30102.c **** * \param[in]    uch_data    - register data
+  75:Src/MAX30102.c **** *
+  76:Src/MAX30102.c **** * \retval       true on success
+  77:Src/MAX30102.c **** */
+  78:Src/MAX30102.c **** {
+  28              		.loc 1 78 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 8
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              	.LVL0:
+  33 0000 10B5     		push	{r4, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 4, -8
+  37              		.cfi_offset 14, -4
+ARM GAS  /tmp/ccsWboKo.s 			page 3
+
+
+  38 0002 86B0     		sub	sp, sp, #24
+  39              	.LCFI1:
+  40              		.cfi_def_cfa_offset 32
+  41 0004 0246     		mov	r2, r0
+  79:Src/MAX30102.c ****   char ach_i2c_data[2];
+  80:Src/MAX30102.c ****   ach_i2c_data[0]=uch_addr;
+  42              		.loc 1 80 0
+  43 0006 8DF81400 		strb	r0, [sp, #20]
+  81:Src/MAX30102.c ****   ach_i2c_data[1]=uch_data;
+  44              		.loc 1 81 0
+  45 000a 06AC     		add	r4, sp, #24
+  46 000c 04F8031D 		strb	r1, [r4, #-3]!
+  82:Src/MAX30102.c ****   
+  83:Src/MAX30102.c ****   if(HAL_I2C_Mem_Write(&hi2c3, I2C_WRITE_ADDR, ach_i2c_data[0], I2C_MEMADD_SIZE_8BIT, (uint8_t *)&a
+  47              		.loc 1 83 0
+  48 0010 0A23     		movs	r3, #10
+  49 0012 0293     		str	r3, [sp, #8]
+  50 0014 0123     		movs	r3, #1
+  51 0016 0193     		str	r3, [sp, #4]
+  52 0018 0094     		str	r4, [sp]
+  53 001a AE21     		movs	r1, #174
+  54              	.LVL1:
+  55 001c 0448     		ldr	r0, .L6
+  56              	.LVL2:
+  57 001e FFF7FEFF 		bl	HAL_I2C_Mem_Write
+  58              	.LVL3:
+  59 0022 10B1     		cbz	r0, .L5
+  84:Src/MAX30102.c ****   {
+  85:Src/MAX30102.c **** 	//   HAL_UART_Transmit(&huart1,(uint8_t *)"Mem_Write success!", 19, 10);
+  86:Src/MAX30102.c **** 	  return true;
+  87:Src/MAX30102.c ****   }
+  88:Src/MAX30102.c ****   else
+  89:Src/MAX30102.c **** 	  return false;
+  60              		.loc 1 89 0
+  61 0024 0020     		movs	r0, #0
+  62              	.L2:
+  90:Src/MAX30102.c **** }
+  63              		.loc 1 90 0
+  64 0026 06B0     		add	sp, sp, #24
+  65              	.LCFI2:
+  66              		.cfi_remember_state
+  67              		.cfi_def_cfa_offset 8
+  68              		@ sp needed
+  69 0028 10BD     		pop	{r4, pc}
+  70              	.L5:
+  71              	.LCFI3:
+  72              		.cfi_restore_state
+  86:Src/MAX30102.c ****   }
+  73              		.loc 1 86 0
+  74 002a 0120     		movs	r0, #1
+  75 002c FBE7     		b	.L2
+  76              	.L7:
+  77 002e 00BF     		.align	2
+  78              	.L6:
+  79 0030 00000000 		.word	hi2c3
+  80              		.cfi_endproc
+  81              	.LFE126:
+ARM GAS  /tmp/ccsWboKo.s 			page 4
+
+
+  83              		.section	.text.maxim_max30102_read_reg,"ax",%progbits
+  84              		.align	1
+  85              		.global	maxim_max30102_read_reg
+  86              		.syntax unified
+  87              		.thumb
+  88              		.thumb_func
+  89              		.fpu fpv4-sp-d16
+  91              	maxim_max30102_read_reg:
+  92              	.LFB127:
+  91:Src/MAX30102.c **** 
+  92:Src/MAX30102.c **** bool maxim_max30102_read_reg(uint8_t uch_addr, uint8_t *puch_data)
+  93:Src/MAX30102.c **** /**
+  94:Src/MAX30102.c **** * \brief        Read a MAX30102 register
+  95:Src/MAX30102.c **** * \par          Details
+  96:Src/MAX30102.c **** *               This function reads a MAX30102 register
+  97:Src/MAX30102.c **** *
+  98:Src/MAX30102.c **** * \param[in]    uch_addr    - register address
+  99:Src/MAX30102.c **** * \param[out]   puch_data    - pointer that stores the register data
+ 100:Src/MAX30102.c **** *
+ 101:Src/MAX30102.c **** * \retval       true on success
+ 102:Src/MAX30102.c **** */
+ 103:Src/MAX30102.c **** {
+  93              		.loc 1 103 0
+  94              		.cfi_startproc
+  95              		@ args = 0, pretend = 0, frame = 0
+  96              		@ frame_needed = 0, uses_anonymous_args = 0
+  97              	.LVL4:
+  98 0000 00B5     		push	{lr}
+  99              	.LCFI4:
+ 100              		.cfi_def_cfa_offset 4
+ 101              		.cfi_offset 14, -4
+ 102 0002 85B0     		sub	sp, sp, #20
+ 103              	.LCFI5:
+ 104              		.cfi_def_cfa_offset 24
+ 104:Src/MAX30102.c ****   // char ch_i2c_data[2];
+ 105:Src/MAX30102.c ****   // ch_i2c_data[0]=uch_addr;
+ 106:Src/MAX30102.c **** 
+ 107:Src/MAX30102.c ****   if(HAL_I2C_Mem_Read(&hi2c3, I2C_READ_ADDR, uch_addr, I2C_MEMADD_SIZE_8BIT, puch_data, 1, 10)==0)
+ 105              		.loc 1 107 0
+ 106 0004 0A23     		movs	r3, #10
+ 107 0006 0293     		str	r3, [sp, #8]
+ 108 0008 0123     		movs	r3, #1
+ 109 000a 0193     		str	r3, [sp, #4]
+ 110 000c 0091     		str	r1, [sp]
+ 111 000e 0246     		mov	r2, r0
+ 112 0010 AF21     		movs	r1, #175
+ 113              	.LVL5:
+ 114 0012 0548     		ldr	r0, .L13
+ 115              	.LVL6:
+ 116 0014 FFF7FEFF 		bl	HAL_I2C_Mem_Read
+ 117              	.LVL7:
+ 118 0018 18B1     		cbz	r0, .L12
+ 108:Src/MAX30102.c ****   {
+ 109:Src/MAX30102.c ****     //HAL_UART_Transmit(&huart1,puch_data, 1, 10);
+ 110:Src/MAX30102.c ****     return true;
+ 111:Src/MAX30102.c ****   }
+ 112:Src/MAX30102.c ****   else
+ARM GAS  /tmp/ccsWboKo.s 			page 5
+
+
+ 113:Src/MAX30102.c ****     return false;
+ 119              		.loc 1 113 0
+ 120 001a 0020     		movs	r0, #0
+ 121              	.L9:
+ 114:Src/MAX30102.c **** }
+ 122              		.loc 1 114 0
+ 123 001c 05B0     		add	sp, sp, #20
+ 124              	.LCFI6:
+ 125              		.cfi_remember_state
+ 126              		.cfi_def_cfa_offset 4
+ 127              		@ sp needed
+ 128 001e 5DF804FB 		ldr	pc, [sp], #4
+ 129              	.L12:
+ 130              	.LCFI7:
+ 131              		.cfi_restore_state
+ 110:Src/MAX30102.c ****   }
+ 132              		.loc 1 110 0
+ 133 0022 0120     		movs	r0, #1
+ 134 0024 FAE7     		b	.L9
+ 135              	.L14:
+ 136 0026 00BF     		.align	2
+ 137              	.L13:
+ 138 0028 00000000 		.word	hi2c3
+ 139              		.cfi_endproc
+ 140              	.LFE127:
+ 142              		.section	.text.maxim_max30102_init,"ax",%progbits
+ 143              		.align	1
+ 144              		.global	maxim_max30102_init
+ 145              		.syntax unified
+ 146              		.thumb
+ 147              		.thumb_func
+ 148              		.fpu fpv4-sp-d16
+ 150              	maxim_max30102_init:
+ 151              	.LFB128:
+ 115:Src/MAX30102.c **** 
+ 116:Src/MAX30102.c **** bool maxim_max30102_init()
+ 117:Src/MAX30102.c **** /**
+ 118:Src/MAX30102.c **** * \brief        Initialize the MAX30102
+ 119:Src/MAX30102.c **** * \par          Details
+ 120:Src/MAX30102.c **** *               This function initializes the MAX30102
+ 121:Src/MAX30102.c **** *
+ 122:Src/MAX30102.c **** * \param        None
+ 123:Src/MAX30102.c **** *
+ 124:Src/MAX30102.c **** * \retval       true on success
+ 125:Src/MAX30102.c **** */
+ 126:Src/MAX30102.c **** {
+ 152              		.loc 1 126 0
+ 153              		.cfi_startproc
+ 154              		@ args = 0, pretend = 0, frame = 0
+ 155              		@ frame_needed = 0, uses_anonymous_args = 0
+ 156 0000 08B5     		push	{r3, lr}
+ 157              	.LCFI8:
+ 158              		.cfi_def_cfa_offset 8
+ 159              		.cfi_offset 3, -8
+ 160              		.cfi_offset 14, -4
+ 127:Src/MAX30102.c ****   if(!maxim_max30102_write_reg(REG_INTR_ENABLE_1,0xc0)) // INTR setting
+ 161              		.loc 1 127 0
+ARM GAS  /tmp/ccsWboKo.s 			page 6
+
+
+ 162 0002 C021     		movs	r1, #192
+ 163 0004 0220     		movs	r0, #2
+ 164 0006 FFF7FEFF 		bl	maxim_max30102_write_reg
+ 165              	.LVL8:
+ 166 000a 0346     		mov	r3, r0
+ 167 000c 08B9     		cbnz	r0, .L18
+ 168              	.L16:
+ 128:Src/MAX30102.c ****     return false;
+ 129:Src/MAX30102.c ****   if(!maxim_max30102_write_reg(REG_INTR_ENABLE_2,0x02)) // Enable DIE_TEMP_RDY: Internal Temperatur
+ 130:Src/MAX30102.c ****     return false;
+ 131:Src/MAX30102.c ****   if(!maxim_max30102_write_reg(REG_FIFO_WR_PTR,0x00))  //FIFO_WR_PTR[4:0]
+ 132:Src/MAX30102.c ****     return false;
+ 133:Src/MAX30102.c ****   if(!maxim_max30102_write_reg(REG_OVF_COUNTER,0x00))  //OVF_COUNTER[4:0]
+ 134:Src/MAX30102.c ****     return false;
+ 135:Src/MAX30102.c ****   if(!maxim_max30102_write_reg(REG_FIFO_RD_PTR,0x00))  //FIFO_RD_PTR[4:0]
+ 136:Src/MAX30102.c ****     return false;
+ 137:Src/MAX30102.c ****   if(!maxim_max30102_write_reg(REG_FIFO_CONFIG,0x0f))  //sample avg = 1, fifo rollover=false, fifo 
+ 138:Src/MAX30102.c ****     return false;
+ 139:Src/MAX30102.c ****   if(!maxim_max30102_write_reg(REG_MODE_CONFIG,0x03))   //0x02 for Red only, 0x03 for SpO2 mode 0x0
+ 140:Src/MAX30102.c ****     return false;
+ 141:Src/MAX30102.c ****   if(!maxim_max30102_write_reg(REG_SPO2_CONFIG,0x27))  // SPO2_ADC range = 4096nA, SPO2 sample rate
+ 142:Src/MAX30102.c ****     return false;
+ 143:Src/MAX30102.c ****   
+ 144:Src/MAX30102.c ****   if(!maxim_max30102_write_reg(REG_LED1_PA,0x24))   //Choose value for ~ 7mA for LED1
+ 145:Src/MAX30102.c ****     return false;
+ 146:Src/MAX30102.c ****   if(!maxim_max30102_write_reg(REG_LED2_PA,0x24))   // Choose value for ~ 7mA for LED2
+ 147:Src/MAX30102.c ****     return false;
+ 148:Src/MAX30102.c ****   if(!maxim_max30102_write_reg(REG_PILOT_PA,0x7f))   // Choose value for ~ 25mA for Pilot LED
+ 149:Src/MAX30102.c ****     return false;
+ 150:Src/MAX30102.c ****   if(!maxim_max30102_write_reg(REG_TEMP_CONFIG,0x01))   // Enable TEMP
+ 151:Src/MAX30102.c ****     return false;
+ 152:Src/MAX30102.c **** 
+ 153:Src/MAX30102.c ****   return true;  
+ 154:Src/MAX30102.c **** }
+ 169              		.loc 1 154 0
+ 170 000e 1846     		mov	r0, r3
+ 171 0010 08BD     		pop	{r3, pc}
+ 172              	.L18:
+ 129:Src/MAX30102.c ****     return false;
+ 173              		.loc 1 129 0
+ 174 0012 0221     		movs	r1, #2
+ 175 0014 0320     		movs	r0, #3
+ 176 0016 FFF7FEFF 		bl	maxim_max30102_write_reg
+ 177              	.LVL9:
+ 178 001a 0346     		mov	r3, r0
+ 179 001c 0028     		cmp	r0, #0
+ 180 001e F6D0     		beq	.L16
+ 131:Src/MAX30102.c ****     return false;
+ 181              		.loc 1 131 0
+ 182 0020 0021     		movs	r1, #0
+ 183 0022 0420     		movs	r0, #4
+ 184 0024 FFF7FEFF 		bl	maxim_max30102_write_reg
+ 185              	.LVL10:
+ 186 0028 0346     		mov	r3, r0
+ 187 002a 0028     		cmp	r0, #0
+ 188 002c EFD0     		beq	.L16
+ 133:Src/MAX30102.c ****     return false;
+ARM GAS  /tmp/ccsWboKo.s 			page 7
+
+
+ 189              		.loc 1 133 0
+ 190 002e 0021     		movs	r1, #0
+ 191 0030 0520     		movs	r0, #5
+ 192 0032 FFF7FEFF 		bl	maxim_max30102_write_reg
+ 193              	.LVL11:
+ 194 0036 0346     		mov	r3, r0
+ 195 0038 0028     		cmp	r0, #0
+ 196 003a E8D0     		beq	.L16
+ 135:Src/MAX30102.c ****     return false;
+ 197              		.loc 1 135 0
+ 198 003c 0021     		movs	r1, #0
+ 199 003e 0620     		movs	r0, #6
+ 200 0040 FFF7FEFF 		bl	maxim_max30102_write_reg
+ 201              	.LVL12:
+ 202 0044 0346     		mov	r3, r0
+ 203 0046 0028     		cmp	r0, #0
+ 204 0048 E1D0     		beq	.L16
+ 137:Src/MAX30102.c ****     return false;
+ 205              		.loc 1 137 0
+ 206 004a 0F21     		movs	r1, #15
+ 207 004c 0820     		movs	r0, #8
+ 208 004e FFF7FEFF 		bl	maxim_max30102_write_reg
+ 209              	.LVL13:
+ 210 0052 0346     		mov	r3, r0
+ 211 0054 0028     		cmp	r0, #0
+ 212 0056 DAD0     		beq	.L16
+ 139:Src/MAX30102.c ****     return false;
+ 213              		.loc 1 139 0
+ 214 0058 0321     		movs	r1, #3
+ 215 005a 0920     		movs	r0, #9
+ 216 005c FFF7FEFF 		bl	maxim_max30102_write_reg
+ 217              	.LVL14:
+ 218 0060 0346     		mov	r3, r0
+ 219 0062 0028     		cmp	r0, #0
+ 220 0064 D3D0     		beq	.L16
+ 141:Src/MAX30102.c ****     return false;
+ 221              		.loc 1 141 0
+ 222 0066 2721     		movs	r1, #39
+ 223 0068 0A20     		movs	r0, #10
+ 224 006a FFF7FEFF 		bl	maxim_max30102_write_reg
+ 225              	.LVL15:
+ 226 006e 0346     		mov	r3, r0
+ 227 0070 0028     		cmp	r0, #0
+ 228 0072 CCD0     		beq	.L16
+ 144:Src/MAX30102.c ****     return false;
+ 229              		.loc 1 144 0
+ 230 0074 2421     		movs	r1, #36
+ 231 0076 0C20     		movs	r0, #12
+ 232 0078 FFF7FEFF 		bl	maxim_max30102_write_reg
+ 233              	.LVL16:
+ 234 007c 0346     		mov	r3, r0
+ 235 007e 0028     		cmp	r0, #0
+ 236 0080 C5D0     		beq	.L16
+ 146:Src/MAX30102.c ****     return false;
+ 237              		.loc 1 146 0
+ 238 0082 2421     		movs	r1, #36
+ 239 0084 0D20     		movs	r0, #13
+ARM GAS  /tmp/ccsWboKo.s 			page 8
+
+
+ 240 0086 FFF7FEFF 		bl	maxim_max30102_write_reg
+ 241              	.LVL17:
+ 242 008a 0346     		mov	r3, r0
+ 243 008c 0028     		cmp	r0, #0
+ 244 008e BED0     		beq	.L16
+ 148:Src/MAX30102.c ****     return false;
+ 245              		.loc 1 148 0
+ 246 0090 7F21     		movs	r1, #127
+ 247 0092 1020     		movs	r0, #16
+ 248 0094 FFF7FEFF 		bl	maxim_max30102_write_reg
+ 249              	.LVL18:
+ 250 0098 0346     		mov	r3, r0
+ 251 009a 0028     		cmp	r0, #0
+ 252 009c B7D0     		beq	.L16
+ 150:Src/MAX30102.c ****     return false;
+ 253              		.loc 1 150 0
+ 254 009e 0121     		movs	r1, #1
+ 255 00a0 2120     		movs	r0, #33
+ 256 00a2 FFF7FEFF 		bl	maxim_max30102_write_reg
+ 257              	.LVL19:
+ 258 00a6 0346     		mov	r3, r0
+ 259 00a8 B1E7     		b	.L16
+ 260              		.cfi_endproc
+ 261              	.LFE128:
+ 263              		.section	.text.maxim_max30102_read_fifo,"ax",%progbits
+ 264              		.align	1
+ 265              		.global	maxim_max30102_read_fifo
+ 266              		.syntax unified
+ 267              		.thumb
+ 268              		.thumb_func
+ 269              		.fpu fpv4-sp-d16
+ 271              	maxim_max30102_read_fifo:
+ 272              	.LFB129:
+ 155:Src/MAX30102.c **** 
+ 156:Src/MAX30102.c **** bool maxim_max30102_read_fifo(uint32_t *pun_red_led, uint32_t *pun_ir_led)
+ 157:Src/MAX30102.c **** /**
+ 158:Src/MAX30102.c **** * \brief        Read a set of samples from the MAX30102 FIFO register
+ 159:Src/MAX30102.c **** * \par          Details
+ 160:Src/MAX30102.c **** *               This function reads a set of samples from the MAX30102 FIFO register
+ 161:Src/MAX30102.c **** *
+ 162:Src/MAX30102.c **** * \param[out]   *pun_red_led   - pointer that stores the red LED reading data
+ 163:Src/MAX30102.c **** * \param[out]   *pun_ir_led    - pointer that stores the IR LED reading data
+ 164:Src/MAX30102.c **** *
+ 165:Src/MAX30102.c **** * \retval       true on success
+ 166:Src/MAX30102.c **** */
+ 167:Src/MAX30102.c **** {
+ 273              		.loc 1 167 0
+ 274              		.cfi_startproc
+ 275              		@ args = 0, pretend = 0, frame = 8
+ 276              		@ frame_needed = 0, uses_anonymous_args = 0
+ 277              	.LVL20:
+ 278 0000 30B5     		push	{r4, r5, lr}
+ 279              	.LCFI9:
+ 280              		.cfi_def_cfa_offset 12
+ 281              		.cfi_offset 4, -12
+ 282              		.cfi_offset 5, -8
+ 283              		.cfi_offset 14, -4
+ARM GAS  /tmp/ccsWboKo.s 			page 9
+
+
+ 284 0002 87B0     		sub	sp, sp, #28
+ 285              	.LCFI10:
+ 286              		.cfi_def_cfa_offset 40
+ 287 0004 0546     		mov	r5, r0
+ 288 0006 0C46     		mov	r4, r1
+ 168:Src/MAX30102.c ****   uint32_t un_temp;
+ 169:Src/MAX30102.c ****   unsigned char uch_temp;
+ 170:Src/MAX30102.c ****   *pun_red_led=0;
+ 289              		.loc 1 170 0
+ 290 0008 0020     		movs	r0, #0
+ 291              	.LVL21:
+ 292 000a 2860     		str	r0, [r5]
+ 171:Src/MAX30102.c ****   *pun_ir_led=0;
+ 293              		.loc 1 171 0
+ 294 000c 0860     		str	r0, [r1]
+ 172:Src/MAX30102.c ****   char ach_i2c_data[6];
+ 173:Src/MAX30102.c ****   
+ 174:Src/MAX30102.c ****   //read and clear status register
+ 175:Src/MAX30102.c ****   maxim_max30102_read_reg(REG_INTR_STATUS_1, &uch_temp);
+ 295              		.loc 1 175 0
+ 296 000e 0DF11701 		add	r1, sp, #23
+ 297              	.LVL22:
+ 298 0012 FFF7FEFF 		bl	maxim_max30102_read_reg
+ 299              	.LVL23:
+ 176:Src/MAX30102.c ****   maxim_max30102_read_reg(REG_INTR_STATUS_2, &uch_temp);
+ 300              		.loc 1 176 0
+ 301 0016 0DF11701 		add	r1, sp, #23
+ 302 001a 0120     		movs	r0, #1
+ 303 001c FFF7FEFF 		bl	maxim_max30102_read_reg
+ 304              	.LVL24:
+ 177:Src/MAX30102.c ****   
+ 178:Src/MAX30102.c ****   ach_i2c_data[0]=REG_FIFO_DATA;
+ 305              		.loc 1 178 0
+ 306 0020 0722     		movs	r2, #7
+ 307 0022 06AB     		add	r3, sp, #24
+ 308 0024 03F8082D 		strb	r2, [r3, #-8]!
+ 179:Src/MAX30102.c ****   if(HAL_I2C_Mem_Read(&hi2c3, I2C_READ_ADDR, REG_FIFO_DATA, I2C_MEMADD_SIZE_8BIT, ach_i2c_data, 6, 
+ 309              		.loc 1 179 0
+ 310 0028 0A21     		movs	r1, #10
+ 311 002a 0291     		str	r1, [sp, #8]
+ 312 002c 0621     		movs	r1, #6
+ 313 002e 0191     		str	r1, [sp, #4]
+ 314 0030 0093     		str	r3, [sp]
+ 315 0032 0123     		movs	r3, #1
+ 316 0034 AF21     		movs	r1, #175
+ 317 0036 1548     		ldr	r0, .L23
+ 318 0038 FFF7FEFF 		bl	HAL_I2C_Mem_Read
+ 319              	.LVL25:
+ 320 003c 20BB     		cbnz	r0, .L21
+ 180:Src/MAX30102.c ****   {
+ 181:Src/MAX30102.c ****     return false;
+ 182:Src/MAX30102.c ****   }
+ 183:Src/MAX30102.c ****   un_temp=(unsigned char) ach_i2c_data[0];
+ 321              		.loc 1 183 0
+ 322 003e 9DF81020 		ldrb	r2, [sp, #16]	@ zero_extendqisi2
+ 323              	.LVL26:
+ 184:Src/MAX30102.c ****   un_temp<<=16;
+ARM GAS  /tmp/ccsWboKo.s 			page 10
+
+
+ 185:Src/MAX30102.c ****   *pun_red_led+=un_temp;
+ 324              		.loc 1 185 0
+ 325 0042 2B68     		ldr	r3, [r5]
+ 326 0044 03EB0243 		add	r3, r3, r2, lsl #16
+ 186:Src/MAX30102.c ****   un_temp=(unsigned char) ach_i2c_data[1];
+ 327              		.loc 1 186 0
+ 328 0048 9DF81120 		ldrb	r2, [sp, #17]	@ zero_extendqisi2
+ 329              	.LVL27:
+ 187:Src/MAX30102.c ****   un_temp<<=8;
+ 188:Src/MAX30102.c ****   *pun_red_led+=un_temp;
+ 330              		.loc 1 188 0
+ 331 004c 03EB0223 		add	r3, r3, r2, lsl #8
+ 189:Src/MAX30102.c ****   un_temp=(unsigned char) ach_i2c_data[2];
+ 332              		.loc 1 189 0
+ 333 0050 9DF81220 		ldrb	r2, [sp, #18]	@ zero_extendqisi2
+ 334              	.LVL28:
+ 190:Src/MAX30102.c ****   *pun_red_led+=un_temp;
+ 335              		.loc 1 190 0
+ 336 0054 1344     		add	r3, r3, r2
+ 337 0056 2B60     		str	r3, [r5]
+ 191:Src/MAX30102.c ****   
+ 192:Src/MAX30102.c ****   un_temp=(unsigned char) ach_i2c_data[3];
+ 338              		.loc 1 192 0
+ 339 0058 9DF81320 		ldrb	r2, [sp, #19]	@ zero_extendqisi2
+ 340              	.LVL29:
+ 193:Src/MAX30102.c ****   un_temp<<=16;
+ 194:Src/MAX30102.c ****   *pun_ir_led+=un_temp;
+ 341              		.loc 1 194 0
+ 342 005c 2368     		ldr	r3, [r4]
+ 343 005e 03EB0243 		add	r3, r3, r2, lsl #16
+ 195:Src/MAX30102.c ****   un_temp=(unsigned char) ach_i2c_data[4];
+ 344              		.loc 1 195 0
+ 345 0062 9DF81420 		ldrb	r2, [sp, #20]	@ zero_extendqisi2
+ 346              	.LVL30:
+ 196:Src/MAX30102.c ****   un_temp<<=8;
+ 197:Src/MAX30102.c ****   *pun_ir_led+=un_temp;
+ 347              		.loc 1 197 0
+ 348 0066 03EB0223 		add	r3, r3, r2, lsl #8
+ 198:Src/MAX30102.c ****   un_temp=(unsigned char) ach_i2c_data[5];
+ 349              		.loc 1 198 0
+ 350 006a 9DF81520 		ldrb	r2, [sp, #21]	@ zero_extendqisi2
+ 351              	.LVL31:
+ 199:Src/MAX30102.c ****   *pun_ir_led+=un_temp;
+ 352              		.loc 1 199 0
+ 353 006e 1344     		add	r3, r3, r2
+ 354 0070 2360     		str	r3, [r4]
+ 200:Src/MAX30102.c ****   *pun_red_led&=0x03FFFF;  //Mask MSB [23:18]
+ 355              		.loc 1 200 0
+ 356 0072 2B68     		ldr	r3, [r5]
+ 357 0074 C3F31103 		ubfx	r3, r3, #0, #18
+ 358 0078 2B60     		str	r3, [r5]
+ 201:Src/MAX30102.c ****   *pun_ir_led&=0x03FFFF;  //Mask MSB [23:18]
+ 359              		.loc 1 201 0
+ 360 007a 2368     		ldr	r3, [r4]
+ 361 007c C3F31103 		ubfx	r3, r3, #0, #18
+ 362 0080 2360     		str	r3, [r4]
+ 202:Src/MAX30102.c ****   
+ARM GAS  /tmp/ccsWboKo.s 			page 11
+
+
+ 203:Src/MAX30102.c ****   
+ 204:Src/MAX30102.c ****   return true;
+ 363              		.loc 1 204 0
+ 364 0082 0120     		movs	r0, #1
+ 365              	.LVL32:
+ 366              	.L20:
+ 205:Src/MAX30102.c **** }
+ 367              		.loc 1 205 0
+ 368 0084 07B0     		add	sp, sp, #28
+ 369              	.LCFI11:
+ 370              		.cfi_remember_state
+ 371              		.cfi_def_cfa_offset 12
+ 372              		@ sp needed
+ 373 0086 30BD     		pop	{r4, r5, pc}
+ 374              	.LVL33:
+ 375              	.L21:
+ 376              	.LCFI12:
+ 377              		.cfi_restore_state
+ 181:Src/MAX30102.c ****   }
+ 378              		.loc 1 181 0
+ 379 0088 0020     		movs	r0, #0
+ 380 008a FBE7     		b	.L20
+ 381              	.L24:
+ 382              		.align	2
+ 383              	.L23:
+ 384 008c 00000000 		.word	hi2c3
+ 385              		.cfi_endproc
+ 386              	.LFE129:
+ 388              		.section	.text.maxim_max30102_reset,"ax",%progbits
+ 389              		.align	1
+ 390              		.global	maxim_max30102_reset
+ 391              		.syntax unified
+ 392              		.thumb
+ 393              		.thumb_func
+ 394              		.fpu fpv4-sp-d16
+ 396              	maxim_max30102_reset:
+ 397              	.LFB130:
+ 206:Src/MAX30102.c **** 
+ 207:Src/MAX30102.c **** bool maxim_max30102_reset()
+ 208:Src/MAX30102.c **** /**
+ 209:Src/MAX30102.c **** * \brief        Reset the MAX30102
+ 210:Src/MAX30102.c **** * \par          Details
+ 211:Src/MAX30102.c **** *               This function resets the MAX30102
+ 212:Src/MAX30102.c **** *
+ 213:Src/MAX30102.c **** * \param        None
+ 214:Src/MAX30102.c **** *
+ 215:Src/MAX30102.c **** * \retval       true on success
+ 216:Src/MAX30102.c **** */
+ 217:Src/MAX30102.c **** {
+ 398              		.loc 1 217 0
+ 399              		.cfi_startproc
+ 400              		@ args = 0, pretend = 0, frame = 0
+ 401              		@ frame_needed = 0, uses_anonymous_args = 0
+ 402 0000 08B5     		push	{r3, lr}
+ 403              	.LCFI13:
+ 404              		.cfi_def_cfa_offset 8
+ 405              		.cfi_offset 3, -8
+ARM GAS  /tmp/ccsWboKo.s 			page 12
+
+
+ 406              		.cfi_offset 14, -4
+ 218:Src/MAX30102.c ****     if(!maxim_max30102_write_reg(REG_MODE_CONFIG,0x40))
+ 407              		.loc 1 218 0
+ 408 0002 4021     		movs	r1, #64
+ 409 0004 0920     		movs	r0, #9
+ 410 0006 FFF7FEFF 		bl	maxim_max30102_write_reg
+ 411              	.LVL34:
+ 219:Src/MAX30102.c ****         return false;
+ 220:Src/MAX30102.c ****     else
+ 221:Src/MAX30102.c ****         return true;    
+ 222:Src/MAX30102.c **** }
+ 412              		.loc 1 222 0
+ 413 000a 08BD     		pop	{r3, pc}
+ 414              		.cfi_endproc
+ 415              	.LFE130:
+ 417              		.global	__aeabi_i2d
+ 418              		.global	__aeabi_dmul
+ 419              		.global	__aeabi_dadd
+ 420              		.global	__aeabi_d2f
+ 421              		.section	.text.maxim_max30102_read_temperature,"ax",%progbits
+ 422              		.align	1
+ 423              		.global	maxim_max30102_read_temperature
+ 424              		.syntax unified
+ 425              		.thumb
+ 426              		.thumb_func
+ 427              		.fpu fpv4-sp-d16
+ 429              	maxim_max30102_read_temperature:
+ 430              	.LFB131:
+ 223:Src/MAX30102.c **** 
+ 224:Src/MAX30102.c **** float maxim_max30102_read_temperature()
+ 225:Src/MAX30102.c **** {
+ 431              		.loc 1 225 0
+ 432              		.cfi_startproc
+ 433              		@ args = 0, pretend = 0, frame = 8
+ 434              		@ frame_needed = 0, uses_anonymous_args = 0
+ 435 0000 30B5     		push	{r4, r5, lr}
+ 436              	.LCFI14:
+ 437              		.cfi_def_cfa_offset 12
+ 438              		.cfi_offset 4, -12
+ 439              		.cfi_offset 5, -8
+ 440              		.cfi_offset 14, -4
+ 441 0002 83B0     		sub	sp, sp, #12
+ 442              	.LCFI15:
+ 443              		.cfi_def_cfa_offset 24
+ 226:Src/MAX30102.c ****     uint8_t temp_inter, temp_fra;
+ 227:Src/MAX30102.c ****     float temp_value;
+ 228:Src/MAX30102.c ****     maxim_max30102_read_reg(REG_TEMP_INTR,&temp_inter);
+ 444              		.loc 1 228 0
+ 445 0004 0DF10701 		add	r1, sp, #7
+ 446 0008 1F20     		movs	r0, #31
+ 447 000a FFF7FEFF 		bl	maxim_max30102_read_reg
+ 448              	.LVL35:
+ 229:Src/MAX30102.c ****     maxim_max30102_read_reg(REG_TEMP_FRAC,&temp_fra);
+ 449              		.loc 1 229 0
+ 450 000e 0DF10601 		add	r1, sp, #6
+ 451 0012 2020     		movs	r0, #32
+ 452 0014 FFF7FEFF 		bl	maxim_max30102_read_reg
+ARM GAS  /tmp/ccsWboKo.s 			page 13
+
+
+ 453              	.LVL36:
+ 230:Src/MAX30102.c ****     temp_value = temp_inter + temp_fra*0.0625;
+ 454              		.loc 1 230 0
+ 455 0018 9DF80600 		ldrb	r0, [sp, #6]	@ zero_extendqisi2
+ 456 001c FFF7FEFF 		bl	__aeabi_i2d
+ 457              	.LVL37:
+ 458 0020 0022     		movs	r2, #0
+ 459 0022 094B     		ldr	r3, .L29
+ 460 0024 FFF7FEFF 		bl	__aeabi_dmul
+ 461              	.LVL38:
+ 462 0028 0446     		mov	r4, r0
+ 463 002a 0D46     		mov	r5, r1
+ 464 002c 9DF80700 		ldrb	r0, [sp, #7]	@ zero_extendqisi2
+ 465 0030 FFF7FEFF 		bl	__aeabi_i2d
+ 466              	.LVL39:
+ 467 0034 2246     		mov	r2, r4
+ 468 0036 2B46     		mov	r3, r5
+ 469 0038 FFF7FEFF 		bl	__aeabi_dadd
+ 470              	.LVL40:
+ 471 003c FFF7FEFF 		bl	__aeabi_d2f
+ 472              	.LVL41:
+ 231:Src/MAX30102.c ****     return  temp_value;
+ 232:Src/MAX30102.c **** }
+ 473              		.loc 1 232 0
+ 474 0040 00EE100A 		vmov	s0, r0
+ 475 0044 03B0     		add	sp, sp, #12
+ 476              	.LCFI16:
+ 477              		.cfi_def_cfa_offset 12
+ 478              		@ sp needed
+ 479 0046 30BD     		pop	{r4, r5, pc}
+ 480              	.L30:
+ 481              		.align	2
+ 482              	.L29:
+ 483 0048 0000B03F 		.word	1068498944
+ 484              		.cfi_endproc
+ 485              	.LFE131:
+ 487              		.text
+ 488              	.Letext0:
+ 489              		.file 2 "/opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/machine/_default_types.h"
+ 490              		.file 3 "/opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_stdint.h"
+ 491              		.file 4 "Drivers/CMSIS/Include/core_cm4.h"
+ 492              		.file 5 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
+ 493              		.file 6 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f429xx.h"
+ 494              		.file 7 "/opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/lock.h"
+ 495              		.file 8 "/opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/_types.h"
+ 496              		.file 9 "/opt/gcc-arm-none-eabi-7-2018-q2-update/lib/gcc/arm-none-eabi/7.3.1/include/stddef.h"
+ 497              		.file 10 "/opt/gcc-arm-none-eabi-7-2018-q2-update/arm-none-eabi/include/sys/reent.h"
+ 498              		.file 11 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 499              		.file 12 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 500              		.file 13 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h"
+ 501              		.file 14 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h"
+ARM GAS  /tmp/ccsWboKo.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 MAX30102.c
+     /tmp/ccsWboKo.s:18     .text.maxim_max30102_write_reg:0000000000000000 $t
+     /tmp/ccsWboKo.s:25     .text.maxim_max30102_write_reg:0000000000000000 maxim_max30102_write_reg
+     /tmp/ccsWboKo.s:79     .text.maxim_max30102_write_reg:0000000000000030 $d
+     /tmp/ccsWboKo.s:84     .text.maxim_max30102_read_reg:0000000000000000 $t
+     /tmp/ccsWboKo.s:91     .text.maxim_max30102_read_reg:0000000000000000 maxim_max30102_read_reg
+     /tmp/ccsWboKo.s:138    .text.maxim_max30102_read_reg:0000000000000028 $d
+     /tmp/ccsWboKo.s:143    .text.maxim_max30102_init:0000000000000000 $t
+     /tmp/ccsWboKo.s:150    .text.maxim_max30102_init:0000000000000000 maxim_max30102_init
+     /tmp/ccsWboKo.s:264    .text.maxim_max30102_read_fifo:0000000000000000 $t
+     /tmp/ccsWboKo.s:271    .text.maxim_max30102_read_fifo:0000000000000000 maxim_max30102_read_fifo
+     /tmp/ccsWboKo.s:384    .text.maxim_max30102_read_fifo:000000000000008c $d
+     /tmp/ccsWboKo.s:389    .text.maxim_max30102_reset:0000000000000000 $t
+     /tmp/ccsWboKo.s:396    .text.maxim_max30102_reset:0000000000000000 maxim_max30102_reset
+     /tmp/ccsWboKo.s:422    .text.maxim_max30102_read_temperature:0000000000000000 $t
+     /tmp/ccsWboKo.s:429    .text.maxim_max30102_read_temperature:0000000000000000 maxim_max30102_read_temperature
+     /tmp/ccsWboKo.s:483    .text.maxim_max30102_read_temperature:0000000000000048 $d
+
+UNDEFINED SYMBOLS
+HAL_I2C_Mem_Write
+hi2c3
+HAL_I2C_Mem_Read
+__aeabi_i2d
+__aeabi_dmul
+__aeabi_dadd
+__aeabi_d2f
