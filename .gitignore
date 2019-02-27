@@ -41,3 +41,5 @@ Thumbs.db
 .BROWSE.C_CPP.DB?
 .cortex-debug.*
 
+# build
+build/
