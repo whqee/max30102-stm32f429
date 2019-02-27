@@ -39,6 +39,7 @@ Thumbs.db
 # Cortex Debug generated files
 .BROWSE.C_CPP.DB
 .BROWSE.C_CPP.DB?
+.BROWSE.C_CPP.DB*
 .cortex-debug.*
 
 # build
