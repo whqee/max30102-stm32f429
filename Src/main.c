@@ -165,11 +165,8 @@ int main(void)
     /* USER CODE BEGIN 3 */
     HAL_Delay(10);
     temp_value = maxim_max30102_read_temperature();
-    HAL_UART_Transmit(&huart1, "s\r\n", 4, 10);
-    HAL_UART_Transmit(&huart1, &temp_value, sizeof(temp_value), 10);
-    HAL_UART_Transmit(&huart1, "e\r\n", 4, 10);
     // temp_value = 20.0112343434;
-    printf("Temperature =  \n");
+    printf("Temperature =  ");
     print_float(temp_value);
     printf("---------\r\n");
 
