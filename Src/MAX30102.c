@@ -227,6 +227,7 @@ float maxim_max30102_read_temperature()
     float temp_value;
     maxim_max30102_read_reg(REG_TEMP_INTR,&temp_inter);
     maxim_max30102_read_reg(REG_TEMP_FRAC,&temp_fra);
+    
     temp_value = temp_inter + temp_fra*0.0625;
     return  temp_value;
 }

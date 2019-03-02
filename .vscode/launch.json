@@ -4,11 +4,23 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        
         {
             "cwd": "${workspaceRoot}",
             "executable": "build/max30102-f429.elf",
-            "name": "Debug Microcontroller ST",
+            "name": "stutil linux",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "stutil",
+            "armToolchainPath": "/home/whq/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "svdFile": "/home/whq/.platformio/platforms/ststm32/misc/svd/STM32F429x.svd",
+            "BMPGDBSerialPort": "/dev/ttyACM0",
+            "preLaunchCommands": ["make"],
+            "runToMain": true
+        },
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "build/max30102-f429.elf",
+            "name": "stutil winx",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "stutil",
@@ -21,15 +33,17 @@
         {
             "cwd": "${workspaceRoot}",
             "executable": "build/max30102-f429.elf",
-            "name": "Debug Microcontroller",
+            "name": "openocd linux",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",
             "configFiles": [
                 "board/stm32f429disc1.cfg"
             ],
-            "device": "STM32F429DISCI",
-            "BMPGDBSerialPort": "COM14",
+            // "device": "STM32F429DISCI",
+            "BMPGDBSerialPort": "/dev/ttyACM0",
+            "svdFile": "/home/whq/.platformio/platforms/ststm32/misc/svd/STM32F429x.svd",
+            "preLaunchCommands": ["make"],
             "runToMain": true
         }
     ]

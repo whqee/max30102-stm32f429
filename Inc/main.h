@@ -52,7 +52,11 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#ifdef __GNUC__
+#include "stdint.h"
+#else
 #include "stdint-gcc.h"
+#endif
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
